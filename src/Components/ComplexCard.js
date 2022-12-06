@@ -3,19 +3,18 @@ import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import { Button } from '@mui/material';
+import { Button, CardContent } from '@mui/material';
 import { FavoriteBorder } from '@mui/icons-material';
-import {useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
-import { Box } from '@mui/system';
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -33,7 +32,7 @@ export default function RecipeReviewCard(props) {
   const [interested, setInterested] = React.useState(false);
   const [toast, setToast] = React.useState(false);
   // console.log(props.data)
-  const { id, title, subheader, image, alt, cardContent, sellerName, price } = props.data
+  const { id, title, created, image, name, information, sellerName, price } = props.data
   const { enqueueSnackbar } = useSnackbar();
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -45,8 +44,8 @@ export default function RecipeReviewCard(props) {
 
   const handleInterestedClick = () => {
     // Make call to backend to show interst for a particular item
-    if(!interested){
-      enqueueSnackbar(`Sent message to seller ${sellerName}`)  
+    if (!interested) {
+      enqueueSnackbar(`Sent message to seller ${sellerName}`)
     }
     setInterested(!interested)
     // setToast(true);
@@ -56,41 +55,64 @@ export default function RecipeReviewCard(props) {
     setExpanded(!expanded);
   };
 
+  function parseISOString(s) {
+    const options = { year: "numeric", month: "long", day: "numeric" }
+    return new Date(s).toLocaleDateString(undefined, options)
+  }
+
   return (
     <React.Fragment>
-    <Card sx={{ maxWidth: 345 }} key={id}>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {sellerName[0]}
-          </Avatar>
-        }
-        // action={
-        //   <IconButton aria-label="settings">
-        //     <MoreVertIcon />
-        //   </IconButton>
-        // }
-        title={title}
-        subheader={subheader}
-      />
-      <CardMedia
+      <Card raised sx={{ maxWidth: 345 }} key={id}>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              {sellerName[0]}
+            </Avatar>
+          }
+          // action={
+          //   <IconButton aria-label="settings">
+          //     <MoreVertIcon />
+          //   </IconButton>
+          // }
+          title={`${name}`}
+          subheader={`${sellerName}, ${parseISOString(created)}`}
+        />
+        {/* <Swiper
+          grabCursor
+          keyboard={{ enabled: true }}
+          pagination={{ clickable: true }}
+          navigation
+          loop
+        //  
+        >
+          <SwiperSlide >
+            <CardMedia component="img" height="194" image={image} name={name}/>
+          </SwiperSlide>
+          {images.map((image, index) => (
+                    <SwiperSlide key={index}>
+                        <CardMedia className={media} image={image} />
+                    </SwiperSlide>
+                ))}
+        </Swiper> */}
+        <CardMedia
         component="img"
         height="194"
         image={image}
-        alt={alt}
+        // sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
+        name={name}
       />
-      <CardContent>
-        <Typography variant="body2" color="text.secondary" height="140px" overflow="auto">
-         {cardContent}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        {/* <IconButton aria-label="add to favorites">
+        <CardContent>
+          <Typography variant="body2" sx={{maxHeight:80, overflow:"auto"}} color="text.secondary">
+            {information}
+          </Typography>
+        </CardContent>
+        <CardActions disableSpacing>
+          {/* <IconButton aria-label="add to favorites">
           <FavoriteIcon startIcon/>
         </IconButton> */}
-        <Button startIcon={interested ? <FavoriteIcon />:<FavoriteBorder />} onClick={handleInterestedClick} aria-label="interest">{interested ? "Intersted" :"Interest"}</Button>
-        
-        {/* <ExpandMore
+          <Button startIcon={interested ? <FavoriteIcon /> : <FavoriteBorder />} onClick={handleInterestedClick} aria-label="interest">{interested ? "Intersted" : "Interest"}</Button>
+
+          {/* <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
           aria-expanded={expanded}
@@ -98,13 +120,13 @@ export default function RecipeReviewCard(props) {
         >
           <ExpandMoreIcon />
         </ExpandMore> */}
-        <AttachMoneyIcon></AttachMoneyIcon>
-        <Typography>{price}</Typography>
-        <IconButton aria-label="share" sx={{marginLeft: "auto"}}>
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
-      {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <AttachMoneyIcon></AttachMoneyIcon>
+          <Typography>{price}</Typography>
+          <IconButton aria-label="share" sx={{ marginLeft: "auto" }}>
+            <ShareIcon />
+          </IconButton>
+        </CardActions>
+        {/* <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
@@ -116,7 +138,7 @@ export default function RecipeReviewCard(props) {
             medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
             occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
             large plate and set aside, leaving chicken and chorizo in the pan. Add
-            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
+            pimentón, bay leaves, garlic, tomatoes, onion, sname and pepper, and cook,
             stirring often until thickened and fragrant, about 10 minutes. Add
             saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
           </Typography>
@@ -133,14 +155,14 @@ export default function RecipeReviewCard(props) {
           </Typography>
         </CardContent>
       </Collapse> */}
-    </Card>
-    {/* <Stack spacing={2} sx={{ width: '100%' }}>
+      </Card>
+      {/* <Stack spacing={2} sx={{ width: '100%' }}>
     <Snackbar open={toast} autoHideDuration={6000} onClose={handleClose}>
     <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
       Sent message to seller
     </Alert>
   </Snackbar>
   </Stack> */}
-  </React.Fragment>
+    </React.Fragment>
   );
 }

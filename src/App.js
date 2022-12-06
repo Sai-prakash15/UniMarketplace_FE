@@ -6,9 +6,8 @@ import { Link, Routes, Route, BrowserRouter, useNavigate, useLocation, Navigate 
 import useAuth from "./Components/useAuth"
 import { Login } from "./Components/LoginComponent"
 import PrimarySearchAppBar from "./Components/navBarComponent.js"
-import { HomeComponent } from './Components/HomeComponent';
+import HomeComponent from './Components/HomeComponent';
 import Chat from './Components/Chat';
-import { Home } from '@mui/icons-material';
 
 // const Home = () => <h1>Home (Public)</h1>;
 const Pricing = () => <h1>Pricing (Public)</h1>;

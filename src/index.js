@@ -3,16 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from "react-redux";
 import { AuthProvider } from "./Components/useAuth";
 import { SnackbarProvider } from 'notistack';
+import reduxStore from "./Redux";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <Provider store={reduxStore}>
     <SnackbarProvider maxSnack={3}>
     <AuthProvider>
     <App sx={{height: "100vh"}}/>
     </AuthProvider>
     </SnackbarProvider>
+    </Provider>
   </React.StrictMode>
   
 );

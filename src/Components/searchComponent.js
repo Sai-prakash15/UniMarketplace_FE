@@ -1,41 +1,40 @@
-import { useState } from "react";
-import "./Home.css"
+import { useEffect, useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
+import { Search, SearchIconWrapper, StyledInputBase } from "./customStylings";
+import debounce from 'lodash.debounce';
+import { useDispatch } from "react-redux";
+import { fetchList } from "../Redux/actions";
+// import "./Home.css"
 
-export function SearchComponent(){
-  const [q, setQ] = useState("");
-  const [filterParam, setFilterParam] = useState(["All"]);
-  return (
-    <div className="search-wrapper">
-                    <label htmlFor="search-form">
-                        <input
-                            type="search"
-                            name="search-form"
-                            id="search-form"
-                            className="search-input"
-                            placeholder="Search for..."
-                            value={q}
-                            onChange={(e) => setQ(e.target.value)}
-                        />
-                        <span className="sr-only">Search countries here</span>
-                    </label>
+export function SearchComponent(props) {
+    const emitChangeDebounced = debounce(emitChange, 250);
+    const dispatch = useDispatch();
+    //   const [search, setSearch] = useState(["All"]);
+    const searchProducts = (event) => {
+        emitChangeDebounced(event.target.value);
+    }
+    function emitChange(value) {
+        dispatch(fetchList({"value": value, "category": props.category}));
+        console.log(value, props.category)
+    }
+    useEffect(() => {
+        return () => {
+            emitChangeDebounced.cancel();
+        }
+    }, [])
 
-                    <div className="select">
-                        <select
-                            onChange={(e) => {
-                                setFilterParam(e.target.value);
-                            }}
-                            className="custom-select"
-                            aria-label="Filter Countries By Region"
-                        >
-                            <option value="All">Filter By Region</option>
-                            <option value="Africa">Africa</option>
-                            <option value="Americas">America</option>
-                            <option value="Asia">Asia</option>
-                            <option value="Europe">Europe</option>
-                            <option value="Oceania">Oceania</option>
-                        </select>
-                        <span className="focus"></span>
-                    </div>
-    </div>
-  );
+
+    return (
+        <Search>
+            <SearchIconWrapper>
+                <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+                onChange={searchProducts}
+                // value={search}
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+            />
+        </Search>
+    );
 };
