@@ -14,6 +14,7 @@ import { useSnackbar } from 'notistack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
+import useAuth from "./useAuth"
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const ExpandMore = styled((props) => {
@@ -28,6 +29,7 @@ const ExpandMore = styled((props) => {
 }));
 
 export default function RecipeReviewCard(props) {
+  const { authed, login, logout } = useAuth();
   const [expanded, setExpanded] = React.useState(false);
   const [interested, setInterested] = React.useState(false);
   const [toast, setToast] = React.useState(false);
@@ -110,7 +112,8 @@ export default function RecipeReviewCard(props) {
           {/* <IconButton aria-label="add to favorites">
           <FavoriteIcon startIcon/>
         </IconButton> */}
-          <Button startIcon={interested ? <FavoriteIcon /> : <FavoriteBorder />} onClick={handleInterestedClick} aria-label="interest">{interested ? "Intersted" : "Interest"}</Button>
+        {authed &&  <Button startIcon={interested ? <FavoriteIcon /> : <FavoriteBorder />} onClick={handleInterestedClick} aria-label="interest">{interested ? "Intersted" : "Interest"}</Button>}
+         
 
           {/* <ExpandMore
           expand={expanded}
