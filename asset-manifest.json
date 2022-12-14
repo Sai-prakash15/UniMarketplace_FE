@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/UniMarketplace_FE/static/css/main.68c4a679.css",
-    "main.js": "/UniMarketplace_FE/static/js/main.ca8e7cde.js",
+    "main.css": "/UniMarketplace_FE/static/css/main.6f90cd97.css",
+    "main.js": "/UniMarketplace_FE/static/js/main.e9a384e6.js",
     "static/js/787.cda612ba.chunk.js": "/UniMarketplace_FE/static/js/787.cda612ba.chunk.js",
     "index.html": "/UniMarketplace_FE/index.html",
-    "main.68c4a679.css.map": "/UniMarketplace_FE/static/css/main.68c4a679.css.map",
-    "main.ca8e7cde.js.map": "/UniMarketplace_FE/static/js/main.ca8e7cde.js.map",
+    "main.6f90cd97.css.map": "/UniMarketplace_FE/static/css/main.6f90cd97.css.map",
+    "main.e9a384e6.js.map": "/UniMarketplace_FE/static/js/main.e9a384e6.js.map",
     "787.cda612ba.chunk.js.map": "/UniMarketplace_FE/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.68c4a679.css",
-    "static/js/main.ca8e7cde.js"
+    "static/css/main.6f90cd97.css",
+    "static/js/main.e9a384e6.js"
   ]
 }
