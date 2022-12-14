@@ -4,8 +4,14 @@ import { Action } from "../constants";
 import { storeListData, apiCalled, storeCategories, itemSuccess } from "../actions";
 import axios from "axios";
 // yield pauses and resume the generator functions
-axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+// axios.defaults.headers.common['Content-Type'] ='application/x-www-form-urlencoded; charset=UTF-8';
+// axios.defaults.headers.common['withCredentials'] =true;
+// axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true
+// axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.xsrfHeaderName = "X-CSRFToken"
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.withCredentials = true
+// axios.defaults.withCredentials = true
 function* getProductList(data) {
    try {
     let url;

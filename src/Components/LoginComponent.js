@@ -1,6 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Avatar, Box, Button, Checkbox, Container, createTheme, CssBaseline, FormControlLabel, Grid, TextField, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "./useAuth";
 // export function Login(){
@@ -29,21 +30,27 @@ const theme = createTheme();
 
 export function Login() {
   const navigate = useNavigate();
-  const { login, authed } = useAuth();
+  const { login, authed, setAuthed} = useAuth();
   const { state } = useLocation();
+
   const handleSubmit = (event) => {
-   
     event.preventDefault();
+    const data = new FormData(event.currentTarget);
     console.log(state?.path, authed)
-    login().then((res) => {
+    login({
+      username: data.get("username"),
+      password: data.get(
+        "password")
+    }).then((res) => {
+      setAuthed(true)
       console.log(res)
       console.log(authed)
       console.log("Login successfull")
       navigate(state?.path || "/");
     });
-    const data = new FormData(event.currentTarget);
+    // const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      username: data.get("username"),
       password: data.get("password")
     });
   };
@@ -76,10 +83,10 @@ export function Login() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
