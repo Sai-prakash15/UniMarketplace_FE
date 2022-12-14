@@ -1,46 +1,44 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import { Button, ClickAwayListener } from '@mui/material';
-import { StyledSelect } from "./customStylings"
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { NotificationComponent } from './NotificationComponent';
-import useAuth from "./useAuth"
 import HomeIcon from '@mui/icons-material/Home';
-import { AddItem } from './AddItem';
-import { SearchComponent } from './searchComponent';
-import { fetchCategories } from '../Redux/actions';
+import MailIcon from '@mui/icons-material/Mail';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { Alert, Button, ClickAwayListener, Snackbar } from '@mui/material';
+import AppBar from '@mui/material/AppBar';
+import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import * as React from 'react';
 import { connect, useDispatch } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { fetchCategories, itemSuccess } from '../Redux/actions';
+import AddItem from './AddItem';
+import { NotificationComponent } from './NotificationComponent';
+import SearchComponent from './searchComponent';
+import useAuth from "./useAuth";
 
 
 function PrimarySearchAppBar(props) {
-  const categoriesInfo = props.data.productReducer?.categories ? props.data.productReducer?.categories : []
-  console.log(categoriesInfo)
+  
   const dispatch = useDispatch();
   React.useEffect(()=>{
       dispatch(fetchCategories({"value": "", "category": 0 }));
   }, [])
 
+  const success = props.data?.success
+  ? props.data?.success
+  : false;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorPopperEl, setAnchorPopperEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [category, setCategory] = React.useState(0);
   const [openPopper, setOpenPopper] = React.useState(false);
-  const categories = [{ "category": "All Categories", "id": 0 }, ...categoriesInfo]
+  
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
 
   const isMenuOpen = Boolean(anchorEl);
@@ -63,9 +61,6 @@ function PrimarySearchAppBar(props) {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
-  }
   let navigate = useNavigate()
 
   const handleMessages = (event) => {
@@ -75,9 +70,6 @@ function PrimarySearchAppBar(props) {
   const goToHome = (event) => {
     navigate('/')
   }
-  const handleChange = (event) => {
-
-  };
 
   const handlePopper = (event) => {
     console.log("hello world")
@@ -87,21 +79,12 @@ function PrimarySearchAppBar(props) {
     console.log(openPopper)
   };
 
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      },
-    },
-  };
 
   const handleClickAway = () => {
     setOpenPopper(false);
   }
   const { authed, login, logout } = useAuth();
-  const { state } = useLocation();
+  const loc  = useLocation();
   const handleLogin = () => {
     navigate("/login");
     // login().then((res) => {
@@ -137,9 +120,9 @@ function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My Items</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
       <MenuItem onClick={handleLogout}>Logout</MenuItem>
     </Menu>
   );
@@ -197,42 +180,28 @@ function PrimarySearchAppBar(props) {
       </MenuItem>
     </Menu>
   );
-
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    dispatch(itemSuccess(false));
+  };
 
 
   return (
 
 
-    <Box sx={{ flexGrow: 1 }}>
-      <AddItem open={open} handleClose={handleClose} />
+    <Box sx={{ flexGrow: 1, position: "sticky", top: 0, zIndex:1}}>
+      {<Snackbar open={success} autoHideDuration={6000} onClose={handleClose}><Alert severity="success">Item Posted succcessfuly</Alert></Snackbar>}
+      <AddItem open={open} setOpen={setOpen} />
       <NotificationComponent openPopper={openPopper} anchorPopperEl={anchorPopperEl} />
 
       <AppBar position="static" style={{ backgroundColor: "black" }}>
         <Toolbar>
           <HomeIcon onClick={goToHome} sx={{ display: { xs: 'none', sm: 'block', cursor: 'pointer' } }} />
-          <FormControl sx={{ marginLeft: "24px" }}>
-            <InputLabel id="demo-simple-select-label" sx={[
-              {
-                '&.Mui-focused': {
-                  color: 'white',
-                },
-                color: "white"
-              }]}>Category</InputLabel>
-            <StyledSelect
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={category}
-              label="Category"
-              MenuProps={MenuProps}
-              onChange={handleCategoryChange}
-              defaultValue={category}
-            >
-              {categories.map(category_ => (<MenuItem value={category_.id}>{category_.category}</MenuItem>))}
-            </StyledSelect>
-          </FormControl>
-          <SearchComponent category={category} />
+          <SearchComponent />
           <Box sx={{ flexGrow: 1 }} />
-          {authed ? <React.Fragment> <Button color="inherit" sx={[{ "&:hover": { backgroundColor: 'grey' }, "backgroundColor": "#bebebe3d" }]} onClick={handleOpen}>Add Item</Button>
+          {authed ? <React.Fragment> {loc?.pathname === "/" && <Button color="inherit" sx={[{ "&:hover": { backgroundColor: 'grey' }, "backgroundColor": "#bebebe3d" }]} onClick={handleOpen}>Add Item</Button>}
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={4} color="error">
@@ -285,11 +254,11 @@ function PrimarySearchAppBar(props) {
     </Box>
   );
 }
-
 function mapStateToProps(state){
   return {
-      "data": state,
+      "data": state.productReducer,
   }
 }
+
 
 export default connect(mapStateToProps)(PrimarySearchAppBar)

@@ -1,7 +1,8 @@
 import { Action } from "../constants";
 const initialState = {
-   isLoading: false,
-   productList: null
+   isLoading: true,
+   productList: null,
+   success: false
 };
 export const productReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -24,11 +25,16 @@ export const productReducer = (state = initialState, action) => {
              categories: action.data
          };
          break;
-
+      case Action.SUCCESS : 
+        return {
+            ...state,
+            success: action.data
+        };
+        break;
        case Action.API_CALLED :  
          return {
              ...state,
-             isLoading: false
+             isLoading: action.data
          };
          break;     
        default : 

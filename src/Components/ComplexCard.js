@@ -1,48 +1,39 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardActions from '@mui/material/CardActions';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import { Button, CardContent } from '@mui/material';
 import { FavoriteBorder } from '@mui/icons-material';
-import { useSnackbar } from 'notistack';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
-import useAuth from "./useAuth"
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Button, CardContent } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import { red } from '@mui/material/colors';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { Image } from 'antd';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import "./ComplexCard.css";
+import useAuth from "./useAuth";
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+// const ExpandMore = styled((props) => {
+//   const { expand, ...other } = props;
+//   return <IconButton {...other} />;
+// })(({ theme, expand }) => ({
+//   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+//   marginLeft: 'auto',
+//   transition: theme.transitions.create('transform', {
+//     duration: theme.transitions.duration.shortest,
+//   }),
+// }));
 
 export default function RecipeReviewCard(props) {
-  const { authed, login, logout } = useAuth();
-  const [expanded, setExpanded] = React.useState(false);
+  const { authed } = useAuth();
   const [interested, setInterested] = React.useState(false);
-  const [toast, setToast] = React.useState(false);
   // console.log(props.data)
-  const { id, title, created, image, name, information, sellerName, price } = props.data
+  const { id, created, image, name, information, sellerName, price } = props.data
   const { enqueueSnackbar } = useSnackbar();
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setToast(false);
-  };
 
   const handleInterestedClick = () => {
     // Make call to backend to show interst for a particular item
@@ -52,10 +43,6 @@ export default function RecipeReviewCard(props) {
     setInterested(!interested)
     // setToast(true);
   }
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   function parseISOString(s) {
     const options = { year: "numeric", month: "long", day: "numeric" }
@@ -96,13 +83,25 @@ export default function RecipeReviewCard(props) {
                     </SwiperSlide>
                 ))}
         </Swiper> */}
-        <CardMedia
+         <CardMedia height="194" sx={{width: "100%" }}>
+        <Image
+          // width={100}
+          style={{ height: "194px" }}
+          rootClassName="imageCSS"
+          // width={200}
+          // height={194}
+          src={image}
+          
+          // sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
+        />
+        </CardMedia>
+        {/* <CardMedia
         component="img"
         height="194"
         image={image}
         // sx={{ padding: "1em 1em 0 1em", objectFit: "contain" }}
         name={name}
-      />
+      /> */}
         <CardContent>
           <Typography variant="body2" sx={{maxHeight:80, overflow:"auto"}} color="text.secondary">
             {information}

@@ -1,10 +1,11 @@
 import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
 import { backend_url } from "../../constants"
 import { Action } from "../constants";
-import { storeListData, apiCalled, storeCategories } from "../actions";
+import { storeListData, apiCalled, storeCategories, itemSuccess } from "../actions";
 import axios from "axios";
 // yield pauses and resume the generator functions
-
+axios.defaults.headers.post['Content-Type'] ='application/json;charset=utf-8';
+axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
 function* getProductList(data) {
    try {
     let url;
@@ -21,15 +22,14 @@ function* getProductList(data) {
        // here I am storing the data by firing action LIST_FETCHED
        console.log(response.data)
        yield put(storeListData(response.data));
+       yield put(apiCalled());
        // for calling another generator funtion use call method
      } else {
         // handle other response code
      }
     } catch (error) {
       console.log(error);
-    } finally {
-      yield put(apiCalled());
-    }
+    } 
 }
 
 function* getCategories(data) {
@@ -49,13 +49,34 @@ function* getCategories(data) {
    } catch (error) {
      console.log(error);
    } finally {
-     yield put(apiCalled());
+    //  yield put(apiCalled());
+   }
+}
+
+function* postItem(data) {
+  try {
+    console.log("here", data)
+    const response = yield axios.post(`${backend_url}/product_section/all_products/` , data.data,{ headers: {'Content-Type': 'multipart/form-data'} });
+    if (response.status === 201) {
+      // to fire another action, use put method
+      // here I am storing the data by firing action LIST_FETCHED
+      console.log(response.data)
+      yield put(itemSuccess(true));
+      // for calling another generator funtion use call method
+    } else {
+       // handle other response code
+    }
+   } catch (error) {
+     console.log(error);
+   } finally {
+    //  yield put(apiCalled());
    }
 }
 
 function* appSagas() { 
     yield takeLatest(Action.FETCH_DATA, getProductList);
     yield takeLatest(Action.FETCH_CATEGORIES, getCategories);
+    yield takeLatest(Action.ADD_ITEM, postItem);
 }
 
 export default appSagas;
