@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/UniMarketplace_FE/static/css/main.073c9b0a.css",
+    "main.js": "/UniMarketplace_FE/static/js/main.171fce20.js",
+    "static/js/787.cda612ba.chunk.js": "/UniMarketplace_FE/static/js/787.cda612ba.chunk.js",
+    "index.html": "/UniMarketplace_FE/index.html",
+    "main.073c9b0a.css.map": "/UniMarketplace_FE/static/css/main.073c9b0a.css.map",
+    "main.171fce20.js.map": "/UniMarketplace_FE/static/js/main.171fce20.js.map",
+    "787.cda612ba.chunk.js.map": "/UniMarketplace_FE/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.171fce20.js"
+  ]
+}
